@@ -10,17 +10,9 @@
     import { AppNavigation } from './setup/AppNavigation.js';
 
     let activePage;
-    $: console.log("App: activePage " + activePage);
-    const activePageChange = (event) => {
-        console.log("activePageChange", event);
-        (activePage = (event.state || event.uri || "home"));
-    }
-
-    console.log("addingEventListeners");
-    addEventListener('replacestate', activePageChange);
+    const activePageChange = (event) => (activePage = (event.target.location.pathname || "/home"));
     addEventListener('pushstate', activePageChange);
     addEventListener('popstate', activePageChange);
-    dispatchEvent(new Event("popstate"));
 
     let routerTargetElement;
     let navigator;
@@ -31,10 +23,7 @@
         console.log("App onMount()");
         navigator = navigation.getInstance();
         navigation.enable(routerTargetElement);
-
-        addEventListener('replacestate', e => console.log("replacestate", e, this));
-        addEventListener('pushstate', e => console.log("pushstate", e, this));
-        addEventListener('popstate', e => console.log("popstate", e, this));
+        navigator.navigate(window.location.pathname);
     });
 
     onDestroy(() => {

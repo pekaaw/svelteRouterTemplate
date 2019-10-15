@@ -15,5 +15,4 @@
     export let pages;
     export let activePage;
     export let navigator;
-    $: console.log(activePage);
 </script>

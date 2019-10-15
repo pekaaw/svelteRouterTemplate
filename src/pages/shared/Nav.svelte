@@ -2,7 +2,7 @@
     <section class="container">
         <ul class="navbar-nav mr-auto">
             {#each pages as page}
-                <li class="nav-item { isActive(page.path) }"><a class="nav-link" on:click={navigate(page.route)} href="{page.route}" onclick="return false;">{ page.name }</a></li>
+                <li class="nav-item" class:active={isActive(page.route)}><a class="nav-link" on:click={navigate(page.route)} href="{page.route}">{ page.name }</a></li>
             {/each}
         </ul>
     </section>
@@ -12,9 +12,11 @@
     export let pages;
     export let activePage;
     export let navigator;
-    let navigate = route => () => {
-        console.log(`navigate onclick(\"${route}\") where activePage = ${activePage}`);
+    let navigate = route => e => {
+        e.preventDefault();
         navigator && navigator.navigate(route);
     };
-    let isActive = str => activePage === str ? 'active' : '';
+    $: isActive = route => {
+        return activePage === route;
+    }
 </script>

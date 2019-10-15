@@ -12,6 +12,24 @@ export class AppNavigation {
 			name: transition.pushLeft,
 			duration: 350
         }));
+
+        const originalNavigate = this.app.navigate.bind(this.app);
+        this.app.navigate = async function pushStateChange() {
+            let url = routes[0].route;
+            if (arguments[0] instanceof Event) {
+                let event = arguments[0];
+                if (event.target.nodeName === "A") {
+                    event.preventDefault();
+                    url = event.target.pathname;
+                }
+            }
+            else if (typeof arguments[0] === "string") {
+                url = arguments[0];
+            }
+
+            await originalNavigate(url);
+            window.dispatchEvent(new Event("pushstate"));
+        };
     }
 
     getInstance() {
