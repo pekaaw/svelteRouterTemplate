@@ -1,6 +1,7 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
+import babel from 'rollup-plugin-babel';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 
@@ -28,6 +29,15 @@ export default {
             dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
         }),
         commonjs(),
+
+        // Support Edge browser
+        babel({
+            extensions: ['.js', '.mjs', '.html', '.svelte'],
+            exclude: ['node_modules/@babel/**'],
+            plugins: [
+                '@babel/plugin-proposal-object-rest-spread'
+            ]
+        }),
 
         // Watch the `public` directory and refresh the browser on changes when not in production
         !production && livereload('public'),
